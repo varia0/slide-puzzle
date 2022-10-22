@@ -10,9 +10,9 @@ var turns = 0;
 // var imgOrder = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 var imgOrder = ["4", "2", "8", "5", "1", "6", "7", "9", "3"];
 
-window.onload = function() {
-    for (let r=0; r < rows; r++) {
-        for (let c=0; c < columns; c++) {
+window.onload = function () {
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns; c++) {
 
             //<img id="0-0" src="1.jpg">
             let tile = document.createElement("img");
@@ -25,16 +25,21 @@ window.onload = function() {
             tile.addEventListener("dragenter", dragEnter);  //dragging image onto another one
             tile.addEventListener("dragleave", dragLeave);  //dragged image leaving anohter image
             tile.addEventListener("drop", dragDrop);        //drag an image over another image, drop the image
-            tile.addEventListener("dragend", dragEnd);      //after drag drop, swap the two tiles
+            // tile.addEventListener("dragend", dragEnd);      //after drag drop, swap the two tiles
+            // mobile
+            tile.addEventListener("touchstart", dragStart);
+            tile.addEventListener("touchmove", dragOver);
+            tile.addEventListener("touchend", dragDrop);
 
-            document.getElementById("board").append(tile);
+            document.getElementById("board").appendChild(tile);
 
         }
     }
 }
 
-function dragStart() {
+function dragStart(e) {
     currTile = this; //this refers to the img tile being dragged
+    // console.log(`currTile: ${currTile.id}`);
 }
 
 function dragOver(e) {
@@ -49,11 +54,16 @@ function dragLeave() {
 
 }
 
-function dragDrop() {
-    otherTile = this; //this refers to the img tile being dropped on
+function dragDrop(e) {
+    let changedTouch = e.changedTouches[0];
+    let elem = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY);
+    otherTile = elem; //this refers to the img tile being dropped on
+    // console.log(`otherTile: ${otherTile}`);
+    dragEnd();
 }
 
 function dragEnd() {
+    console.log("end");
     if (!otherTile.src.includes("3.jpg")) {
         return;
     }
@@ -66,11 +76,11 @@ function dragEnd() {
     let r2 = parseInt(otherCoords[0]);
     let c2 = parseInt(otherCoords[1]);
 
-    let moveLeft = r == r2 && c2 == c-1;
-    let moveRight = r == r2 && c2 == c+1;
+    let moveLeft = r == r2 && c2 == c - 1;
+    let moveRight = r == r2 && c2 == c + 1;
 
-    let moveUp = c == c2 && r2 == r-1;
-    let moveDown = c == c2 && r2 == r+1;
+    let moveUp = c == c2 && r2 == r - 1;
+    let moveDown = c == c2 && r2 == r + 1;
 
     let isAdjacent = moveLeft || moveRight || moveUp || moveDown;
 
