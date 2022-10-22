@@ -25,11 +25,11 @@ window.onload = function () {
             tile.addEventListener("dragenter", dragEnter);  //dragging image onto another one
             tile.addEventListener("dragleave", dragLeave);  //dragged image leaving anohter image
             tile.addEventListener("drop", dragDrop);        //drag an image over another image, drop the image
-            // tile.addEventListener("dragend", dragEnd);      //after drag drop, swap the two tiles
+            tile.addEventListener("dragend", dragEnd);      //after drag drop, swap the two tiles
             // mobile
             tile.addEventListener("touchstart", dragStart);
             tile.addEventListener("touchmove", dragOver);
-            tile.addEventListener("touchend", dragDrop);
+            tile.addEventListener("touchend", touchEnd);
 
             document.getElementById("board").appendChild(tile);
 
@@ -54,16 +54,18 @@ function dragLeave() {
 
 }
 
-function dragDrop(e) {
+function dragDrop() {
+    otherTile = this; //this refers to the img tile being dropped on
+}
+
+function touchEnd(e) {
     let changedTouch = e.changedTouches[0];
     let elem = document.elementFromPoint(changedTouch.clientX, changedTouch.clientY);
     otherTile = elem; //this refers to the img tile being dropped on
-    // console.log(`otherTile: ${otherTile}`);
     dragEnd();
 }
 
 function dragEnd() {
-    console.log("end");
     if (!otherTile.src.includes("3.jpg")) {
         return;
     }
